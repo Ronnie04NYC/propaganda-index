@@ -1,0 +1,25 @@
+import React from 'react';
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'danger';
+}
+
+export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', className = '', ...props }) => {
+  const baseStyles = "font-mono font-bold py-3 px-6 uppercase tracking-widest transition-all duration-200 relative overflow-hidden group clip-path-slant";
+  
+  const variants = {
+    primary: "bg-cyber-green text-cyber-black hover:bg-white hover:text-cyber-black hover:shadow-[0_0_20px_#00ff41]",
+    secondary: "border border-cyber-blue text-cyber-blue hover:bg-cyber-blue hover:text-cyber-black hover:shadow-[0_0_20px_#00d9f7]",
+    danger: "border border-cyber-pink text-cyber-pink hover:bg-cyber-pink hover:text-white hover:shadow-[0_0_20px_#ff00ff]"
+  };
+
+  return (
+    <button 
+      className={`${baseStyles} ${variants[variant]} ${className}`}
+      {...props}
+    >
+      <span className="relative z-10">{children}</span>
+      <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
+    </button>
+  );
+};
