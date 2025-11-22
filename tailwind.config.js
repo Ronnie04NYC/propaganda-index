@@ -2,7 +2,9 @@
 export default {
   content: [
     "./index.html",
-    "./**/*.{js,ts,jsx,tsx}",
+    "./*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./services/**/*.{js,ts,jsx,tsx}"
   ],
   darkMode: 'class',
   theme: {
@@ -24,6 +26,7 @@ export default {
         'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'glitch': 'glitch 1s linear infinite',
         'holo': 'holo 3s ease infinite',
+        'text-flow': 'text-flow 3s ease infinite',
       },
       keyframes: {
         glitch: {
@@ -34,6 +37,16 @@ export default {
         holo: {
           '0%, 100%': { opacity: '0.5', backgroundPosition: '50% 50%', filter: 'brightness(1)' },
           '50%': { opacity: '0.3', backgroundPosition: '100% 50%', filter: 'brightness(1.2)' },
+        },
+        'text-flow': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          },
         }
       }
     },
