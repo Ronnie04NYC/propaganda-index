@@ -24,11 +24,23 @@ const App: React.FC = () => {
     if (state.status === 'quiz') return;
 
     const interval = setInterval(() => {
-      const simulatedTitles = [
-        "Digital Dissident", "System Optimist", "Grid Defector", 
-        "Narrative Conductor", "Static Noise Generator", "Blue Pill Connoisseur",
-        "Legacy Media Node", "Algorithm Loyalist", "Chaos Agent", "Pattern Matcher"
+      const prefixes = ["Neo", "Post", "Meta", "Crypto", "Hyper", "Cyber", "Anti", "Pro", "Ultra", "Dark", "Light"];
+      const bases = [
+        "Dissident", "Optimist", "Defector", "Conductor", "Generator", "Connoisseur",
+        "Node", "Loyalist", "Agent", "Matcher", "Skeptic", "Drifter", "Nomad", "Oracle",
+        "Proxy", "Unit", "Vector", "Signal", "Noise", "Echo", "Specter", "Ghost",
+        "Architect", "Engineer", "Operator", "Punk", "Shaman", "Tourist", "Native"
       ];
+      
+      const randomTitle = () => {
+        const usePrefix = Math.random() > 0.7;
+        const base = bases[Math.floor(Math.random() * bases.length)];
+        if (usePrefix) {
+           const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+           return `${prefix}-${base}`;
+        }
+        return `${Math.random() > 0.5 ? 'Digital' : 'Analog'} ${base}`;
+      };
       
       const rScore = Math.floor(Math.random() * MAX_SCORE);
       const levelObj = getExposureLevel(rScore);
@@ -36,13 +48,13 @@ const App: React.FC = () => {
       const newEntry: LeaderboardEntry = {
         id: `SUBJ-${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
         timestamp: "JUST NOW",
-        classification: simulatedTitles[Math.floor(Math.random() * simulatedTitles.length)],
+        classification: randomTitle(),
         score: rScore,
         status: levelObj.text
       };
 
       setLeaderboard(prev => [newEntry, ...prev.slice(0, 8)]); // Keep recent 9 items
-    }, 4500); // New scan every 4.5 seconds
+    }, 3500); // New scan every 3.5 seconds
 
     return () => clearInterval(interval);
   }, [state.status]);
@@ -267,7 +279,7 @@ const App: React.FC = () => {
                   <div className="flex flex-col md:flex-row gap-6 md:gap-8 mb-6 md:mb-8 relative z-10 items-center">
                     
                     {/* GENERATIVE ART GLYPH */}
-                    <div className="flex flex-col items-center md:items-start flex-shrink-0 gap-4">
+                    <div className="flex flex-col items-center flex-shrink-0 gap-4">
                         <div className="w-24 h-24 md:w-36 md:h-36 relative">
                             {/* Seed includes specific answers to ensure uniqueness */}
                             <IdentityGlyph 
