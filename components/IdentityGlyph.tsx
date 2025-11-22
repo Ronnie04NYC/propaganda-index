@@ -33,6 +33,7 @@ export const IdentityGlyph: React.FC<IdentityGlyphProps> = ({ seed, className = 
       // Threshold determines density (0.5 = 50% fill)
       if (rand > 0.5) {
         // Use the random value to deterministically pick a color from the palette
+        // We use a higher precision part of the random number to avoid correlation with density
         const colorIndex = Math.floor((rand * 1000) % palette.length);
         result.push(palette[colorIndex]);
       } else {
