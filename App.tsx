@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { QUESTIONS, MAX_SCORE, APP_URL, MOCK_LEADERBOARD } from './constants';
 import { QuizState, Option, AnalysisResult, LeaderboardEntry } from './types';
 import { analyzeResults } from './services/geminiService';
@@ -16,6 +16,36 @@ const App: React.FC = () => {
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [copyFeedback, setCopyFeedback] = useState<'idle' | 'copied'>('idle');
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(MOCK_LEADERBOARD);
+
+  // --- LIVE TRAFFIC SIMULATOR ---
+  // This effect simulates other users taking the test globally
+  useEffect(() => {
+    // Only run simulation if we are not currently taking the quiz to avoid distraction
+    if (state.status === 'quiz') return;
+
+    const interval = setInterval(() => {
+      const simulatedTitles = [
+        "Digital Dissident", "System Optimist", "Grid Defector", 
+        "Narrative Conductor", "Static Noise Generator", "Blue Pill Connoisseur",
+        "Legacy Media Node", "Algorithm Loyalist", "Chaos Agent", "Pattern Matcher"
+      ];
+      
+      const rScore = Math.floor(Math.random() * MAX_SCORE);
+      const levelObj = getExposureLevel(rScore);
+      
+      const newEntry: LeaderboardEntry = {
+        id: `SUBJ-${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
+        timestamp: "JUST NOW",
+        classification: simulatedTitles[Math.floor(Math.random() * simulatedTitles.length)],
+        score: rScore,
+        status: levelObj.text
+      };
+
+      setLeaderboard(prev => [newEntry, ...prev.slice(0, 8)]); // Keep recent 9 items
+    }, 4500); // New scan every 4.5 seconds
+
+    return () => clearInterval(interval);
+  }, [state.status]);
 
   const handleStart = () => {
     setState(prev => ({ ...prev, status: 'quiz', currentQuestionIndex: 0, score: 0, answers: [] }));
@@ -53,7 +83,7 @@ const App: React.FC = () => {
     const result = await analyzeResults(formattedAnswers, finalScore, MAX_SCORE);
     setAnalysis(result);
     
-    // Add to leaderboard
+    // Add User's Real Result to leaderboard
     const level = getExposureLevel(finalScore).text;
     const newEntry: LeaderboardEntry = {
       id: `SUBJ-${Math.random().toString(36).substr(2, 4).toUpperCase()}`,
