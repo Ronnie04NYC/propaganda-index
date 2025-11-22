@@ -15,7 +15,6 @@ const App: React.FC = () => {
 
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [copyFeedback, setCopyFeedback] = useState<'idle' | 'copied'>('idle');
-  const [walletCopied, setWalletCopied] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>(MOCK_LEADERBOARD);
 
   const handleStart = () => {
@@ -118,12 +117,6 @@ const App: React.FC = () => {
         break;
     }
     if (link) window.open(link, '_blank', 'width=600,height=400');
-  };
-
-  const copyWallet = () => {
-    navigator.clipboard.writeText(DONATION_WALLET);
-    setWalletCopied(true);
-    setTimeout(() => setWalletCopied(false), 2000);
   };
 
   return (
@@ -256,14 +249,16 @@ const App: React.FC = () => {
                   {/* Scanline for Card */}
                   <div className="absolute inset-0 pointer-events-none bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==')] opacity-5"></div>
                   
-                  <div className="flex flex-col md:flex-row gap-6 md:gap-8 mb-6 md:mb-8 relative z-10">
+                  <div className="flex flex-col md:flex-row gap-6 md:gap-8 mb-6 md:mb-8 relative z-10 items-center">
                     
                     {/* GENERATIVE ART GLYPH */}
                     <div className="flex justify-center md:justify-start flex-shrink-0">
                         <div className="w-24 h-24 md:w-36 md:h-36 relative">
+                            {/* Seed includes specific answers to ensure uniqueness */}
                             <IdentityGlyph 
-                                seed={analysis.title} 
+                                seed={analysis.title + state.score + JSON.stringify(state.answers)}
                                 color={getExposureLevel(state.score).bg}
+                                className="w-full h-full"
                             />
                             <div className="absolute -bottom-2 w-full text-center">
                                 <span className="text-[8px] bg-black px-2 font-mono text-gray-500 border border-gray-800">GENETIC_HASH</span>
@@ -271,28 +266,18 @@ const App: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="flex-1 text-center md:text-left">
-                      <div className="text-[10px] md:text-xs text-cyber-blue mb-1 font-mono uppercase tracking-widest">Classification</div>
-                      <h2 className="text-2xl md:text-4xl font-black text-white mb-4 tracking-tight drop-shadow-[0_0_5px_rgba(255,255,255,0.2)] leading-tight">
-                        {analysis.title}
-                      </h2>
-                      
-                      <div className={`inline-block px-4 py-2 border ${getExposureLevel(state.score).border} bg-black/50 backdrop-blur-md`}>
-                        <div className="flex items-center gap-3">
-                           <span className={`font-mono font-bold text-xl md:text-2xl ${getExposureLevel(state.score).color}`}>
-                              {state.score}
-                           </span>
-                           <div className="flex flex-col items-start">
-                              <span className="text-[8px] text-gray-500 uppercase">Exposure Index</span>
-                              <span className={`text-[8px] md:text-[10px] font-bold uppercase ${getExposureLevel(state.score).color}`}>
-                                {getExposureLevel(state.score).text}
-                              </span>
-                           </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex-1 flex flex-col justify-center border-t md:border-t-0 md:border-l border-gray-800 pt-4 md:pt-0 md:pl-8">
+                    {/* Classification, Score, and Status Badge */}
+                    <div className="flex-1 flex flex-col justify-center pt-4 md:pt-0 md:pl-6 text-center md:text-left">
+                       <div className={`inline-block self-center md:self-start px-3 py-1 border ${getExposureLevel(state.score).border} ${getExposureLevel(state.score).text} text-[10px] font-bold mb-3 uppercase tracking-wider shadow-[0_0_10px_rgba(0,0,0,0.5)]`}>
+                         {getExposureLevel(state.score).text}
+                       </div>
+                       <h2 className="text-2xl md:text-4xl font-black text-white mb-2 uppercase leading-none tracking-tighter drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
+                         {analysis.title}
+                       </h2>
+                       <div className="font-mono text-cyber-blue text-xl md:text-2xl mb-4">
+                         SCORE: <span className="text-white">{state.score}</span> / {MAX_SCORE}
+                       </div>
+                       
                        <div className="text-[10px] md:text-xs text-gray-500 mb-2 md:mb-3 font-mono uppercase">Detected Traits</div>
                        <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                           {analysis.traits.map((trait, i) => (
@@ -309,22 +294,16 @@ const App: React.FC = () => {
                       "{analysis.description}"
                     </p>
                   </div>
-
-                   {/* Ad Space Placeholder */}
-                   <div className="mt-4 md:mt-6 border border-dashed border-gray-800 p-2 flex justify-center items-center opacity-50 hover:opacity-100 transition-opacity cursor-help" title="Ad Space Available">
-                      <span className="text-[8px] md:text-[10px] text-gray-600 font-mono uppercase tracking-[0.2em]">System Sponsor // Space Available</span>
-                   </div>
                 </div>
 
                  {/* Card Footer */}
-                <div className="bg-gray-900 p-2 border-t border-gray-700 flex justify-between items-center">
+                <div className="bg-gray-900 p-2 border-t border-gray-700 flex justify-center items-center">
                    <div className="text-[8px] md:text-[10px] text-cyber-green font-mono">VERIFIED BY AI NEURAL NET</div>
-                   <div className="text-[8px] md:text-[10px] text-gray-500 font-mono">BASE_ECOSYSTEM_READY</div>
                 </div>
              </div>
 
              {/* ACTION CENTER */}
-             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+             <div className="grid grid-cols-1 gap-4">
                 
                 {/* Primary Actions */}
                 <div className="flex flex-col gap-3">
@@ -359,44 +338,8 @@ const App: React.FC = () => {
                    </div>
 
                    <div className="flex gap-3 mt-1">
-                      <Button onClick={() => window.location.reload()} variant="secondary" className="flex-1 text-xs">RETAKE</Button>
-                      <button 
-                        disabled 
-                        className="flex-1 bg-gray-900 border border-gray-700 text-gray-500 font-mono text-xs uppercase tracking-widest cursor-not-allowed opacity-70 flex flex-col items-center justify-center py-3 hover:border-blue-600 transition-colors"
-                        title="Coming Soon to Base Mainnet"
-                      >
-                        <span className="text-blue-500 font-bold">MINT SOULBOUND ID</span>
-                        <span className="text-[8px] text-gray-500 mt-1">(COMING SOON TO BASE)</span>
-                      </button>
+                      <Button onClick={() => window.location.reload()} variant="secondary" className="w-full text-xs">RETAKE</Button>
                    </div>
-                </div>
-
-                {/* Donation / Base Support */}
-                <div className="bg-blue-950/30 border border-blue-500/20 p-4 flex flex-col justify-between relative overflow-hidden">
-                   <div className="absolute top-0 right-0 bg-blue-600 text-[9px] px-2 py-0.5 font-bold text-white uppercase tracking-wider">
-                     Base Network
-                   </div>
-                   <div>
-                     <h4 className="text-xs text-blue-400 mb-1 font-bold uppercase tracking-widest">Support the Truth</h4>
-                     <p className="text-[10px] text-gray-400 mb-3 leading-snug">
-                       This tool is free, but independent development isn't. Support us on Base.
-                     </p>
-                   </div>
-                   
-                   <button 
-                    onClick={copyWallet}
-                    className="group w-full flex items-center justify-between bg-black/40 border border-blue-500/30 p-2 hover:bg-blue-500/10 hover:border-blue-400 transition-all cursor-pointer"
-                   >
-                     <div className="flex items-center overflow-hidden">
-                       <div className="w-2 h-2 rounded-full bg-blue-500 mr-2 animate-pulse"></div>
-                       <div className="font-mono text-[10px] text-gray-400 truncate mr-2">
-                         {walletCopied ? "ADDRESS COPIED TO CLIPBOARD" : DONATION_WALLET}
-                       </div>
-                     </div>
-                     <div className="text-blue-400 text-xs transform group-hover:scale-110 transition-transform">
-                       {walletCopied ? "✓" : "❐"}
-                     </div>
-                   </button>
                 </div>
 
              </div>
