@@ -100,21 +100,6 @@ const App: React.FC = () => {
       case 'x':
         link = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
         break;
-      case 'facebook':
-        link = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-        break;
-      case 'reddit':
-        link = `https://www.reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent("Propaganda Exposure Index Results")}`;
-        break;
-      case 'linkedin':
-        link = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
-        break;
-      case 'whatsapp':
-        link = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
-        break;
-      case 'telegram':
-        link = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
-        break;
     }
     if (link) window.open(link, '_blank', 'width=600,height=400');
   };
@@ -132,7 +117,7 @@ const App: React.FC = () => {
              {/* Subtle grid background for header */}
              <div className="absolute -inset-x-10 -inset-y-4 bg-[linear-gradient(90deg,rgba(0,255,65,0.1)_1px,transparent_1px),linear-gradient(rgba(0,255,65,0.1)_1px,transparent_1px)] bg-[size:20px_20px] opacity-20 mask-image-fade-out pointer-events-none"></div>
              
-             <h1 className="text-5xl xs:text-6xl sm:text-7xl md:text-8xl font-black font-mono tracking-tighter animate-pulse-fast text-transparent bg-clip-text bg-gradient-to-b from-cyber-green via-white to-cyber-blue drop-shadow-[0_0_15px_rgba(0,255,65,0.4)] relative z-10 leading-[0.85] flex flex-col items-center">
+             <h1 className="text-5xl xs:text-6xl sm:text-7xl md:text-8xl font-black font-mono tracking-tighter animate-text-flow text-transparent bg-clip-text bg-gradient-to-r from-cyber-green via-white to-cyber-blue drop-shadow-[0_0_15px_rgba(0,255,65,0.4)] relative z-10 leading-[0.85] flex flex-col items-center bg-[length:200%_auto]">
               <span>PROPAGANDA</span>
               <span>EXPOSURE</span>
               <span>INDEX</span>
@@ -252,7 +237,7 @@ const App: React.FC = () => {
                   <div className="flex flex-col md:flex-row gap-6 md:gap-8 mb-6 md:mb-8 relative z-10 items-center">
                     
                     {/* GENERATIVE ART GLYPH */}
-                    <div className="flex justify-center md:justify-start flex-shrink-0">
+                    <div className="flex flex-col items-center md:items-start flex-shrink-0 gap-4">
                         <div className="w-24 h-24 md:w-36 md:h-36 relative">
                             {/* Seed includes specific answers to ensure uniqueness */}
                             <IdentityGlyph 
@@ -260,9 +245,18 @@ const App: React.FC = () => {
                                 color={getExposureLevel(state.score).bg}
                                 className="w-full h-full"
                             />
-                            <div className="absolute -bottom-2 w-full text-center">
+                            <div className="absolute -bottom-2 w-full text-center pointer-events-none">
                                 <span className="text-[8px] bg-black px-2 font-mono text-gray-500 border border-gray-800">GENETIC_HASH</span>
                             </div>
+                        </div>
+                        {/* THE BLURB */}
+                        <div className="mt-2 max-w-[180px] text-center border-t border-gray-800 pt-2">
+                          <p className="text-xs text-white font-mono leading-tight">
+                            Unique biometric art generated from your neural patterns.
+                          </p>
+                          <p className="text-[10px] text-cyber-blue mt-1 font-mono uppercase">
+                            Right-click to save
+                          </p>
                         </div>
                     </div>
 
@@ -317,22 +311,20 @@ const App: React.FC = () => {
                    </Button>
 
                    {/* Social Share Row */}
-                   <div className="grid grid-cols-6 gap-1">
+                   <div className="grid grid-cols-1 gap-1">
                       {[
-                        { id: 'x', icon: <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />, bg: 'hover:bg-white hover:text-black' },
-                        { id: 'facebook', icon: <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />, bg: 'hover:bg-[#1877F2] hover:text-white' },
-                        { id: 'reddit', icon: <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.196-.491.964 0 1.75.786 1.75 1.75s-.786 1.75-1.75 1.75c-.516 0-.977-.224-1.296-.583-1.794 1.158-4.137 1.158-5.93 0-.319.359-.78.583-1.296.583-.964 0-1.75-.786-1.75-1.75s.786-1.75 1.75-1.75c.466 0 .888.182 1.196.491 1.194-.856 2.85-1.418 4.674-1.488l.831-3.875 1.424.32a1.23 1.23 0 0 1 .12.005z"/>, bg: 'hover:bg-[#FF4500] hover:text-white' },
-                        { id: 'linkedin', icon: <path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5A2.48 2.48 0 0 1 0 3.5C0 2.119 1.11 1 2.48 1s2.5 1.119 2.5 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/>, bg: 'hover:bg-[#0077b5] hover:text-white' },
-                        { id: 'whatsapp', icon: <path d="M13.601 2.326A11.295 11.295 0 0 0 2.69 13.624c0 2.093.547 4.146 1.588 5.945L2.4 24l4.66-1.226c1.742.95 3.721 1.452 5.742 1.455h.006c6.241 0 11.318-5.077 11.323-11.324a11.33 11.33 0 0 0-3.368-8.025 11.28 11.28 0 0 0-7.16-2.554z"/>, bg: 'hover:bg-[#25D366] hover:text-white' },
-                        { id: 'telegram', icon: <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 11.944 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>, bg: 'hover:bg-[#0088cc] hover:text-white' }
+                        { id: 'x', icon: <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />, bg: 'hover:bg-white hover:text-black' }
                       ].map((platform) => (
                         <button
                           key={platform.id}
                           onClick={() => shareToSocial(platform.id)}
-                          className={`bg-gray-900 border border-gray-700 p-3 flex items-center justify-center text-gray-400 transition-all duration-200 ${platform.bg}`}
+                          className={`bg-gray-900 border border-gray-700 p-3 flex items-center justify-center text-gray-400 transition-all duration-200 ${platform.bg} w-full group`}
                           title={`Share on ${platform.id.charAt(0).toUpperCase() + platform.id.slice(1)}`}
                         >
-                          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">{platform.icon}</svg>
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold font-mono tracking-wider">POST RESULTS TO</span>
+                            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">{platform.icon}</svg>
+                          </div>
                         </button>
                       ))}
                    </div>
