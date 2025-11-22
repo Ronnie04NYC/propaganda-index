@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 interface IdentityGlyphProps {
   seed: string;
   className?: string;
-  color?: string; // Kept for interface compatibility, but ignored for multicolor mode
+  color?: string; // Kept for interface compatibility
 }
 
 export const IdentityGlyph: React.FC<IdentityGlyphProps> = ({ seed, className = '' }) => {
@@ -16,11 +16,11 @@ export const IdentityGlyph: React.FC<IdentityGlyphProps> = ({ seed, className = 
     }
     
     const palette = [
-      'bg-cyber-green shadow-[0_0_4px_#00ff41]',
-      'bg-cyber-pink shadow-[0_0_4px_#ff00ff]',
-      'bg-cyber-blue shadow-[0_0_4px_#00d9f7]',
-      'bg-cyber-yellow shadow-[0_0_4px_#fdfd00]',
-      'bg-white shadow-[0_0_4px_#ffffff]'
+      '#00ff41', // cyber-green
+      '#ff00ff', // cyber-pink
+      '#00d9f7', // cyber-blue
+      '#fdfd00', // cyber-yellow
+      '#ffffff'  // white
     ];
 
     const result = [];
@@ -33,28 +33,33 @@ export const IdentityGlyph: React.FC<IdentityGlyphProps> = ({ seed, className = 
       // Threshold determines density (0.5 = 50% fill)
       if (rand > 0.5) {
         // Use the random value to deterministically pick a color from the palette
-        // We use a higher precision part of the random number to avoid correlation with density
         const colorIndex = Math.floor((rand * 1000) % palette.length);
-        result.push(palette[colorIndex]);
-      } else {
-        result.push(null);
+        const x = i % 8;
+        const y = Math.floor(i / 8);
+        result.push({ x, y, color: palette[colorIndex] });
       }
     }
     return result;
   }, [seed]);
 
   return (
-    <div className={`w-full h-full aspect-square grid grid-cols-8 gap-0.5 p-1 bg-black/40 border border-gray-700/50 ${className}`}>
-      {blocks.map((colorClass, i) => (
-        <div
+    <svg 
+      viewBox="0 0 8 8" 
+      className={`w-full h-full bg-black/40 border border-gray-700/50 ${className}`}
+      preserveAspectRatio="none"
+      shapeRendering="crispEdges"
+    >
+      {blocks.map((block, i) => (
+        <rect
           key={i}
-          className={`w-full h-full transition-all duration-500 ${
-            colorClass 
-              ? `${colorClass} opacity-90` 
-              : 'bg-transparent'
-          }`}
+          x={block.x}
+          y={block.y}
+          width="1"
+          height="1"
+          fill={block.color}
+          className="opacity-90"
         />
       ))}
-    </div>
+    </svg>
   );
 };
