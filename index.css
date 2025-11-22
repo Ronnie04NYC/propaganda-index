@@ -1,10 +1,6 @@
-/* ================================================================== */
-/* VERCEL MODE: UNCOMMENT the 3 lines below before deploying.         */
-/* PREVIEW MODE: Keep them commented out to avoid errors here.        */
-/* ================================================================== */
-/* @tailwind base; */
-/* @tailwind components; */
-/* @tailwind utilities; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Global Styles */
 body {
