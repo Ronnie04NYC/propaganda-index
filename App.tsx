@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { QUESTIONS, MAX_SCORE, APP_URL, DONATION_WALLET, MOCK_LEADERBOARD } from './constants';
+import { QUESTIONS, MAX_SCORE, APP_URL, MOCK_LEADERBOARD } from './constants';
 import { QuizState, Option, AnalysisResult, LeaderboardEntry } from './types';
 import { analyzeResults } from './services/geminiService';
 import { Button } from './components/Button';
